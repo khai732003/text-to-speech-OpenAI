@@ -14,7 +14,9 @@ import {
   ImageListItem,
   Container,
   CircularProgress,
+  Card,
 } from "@mui/material";
+import KeyboardBackspaceIcon from "@mui/icons-material/KeyboardBackspace";
 import React, { useState } from "react";
 import axios from "axios";
 import openAi from "../api";
@@ -23,6 +25,7 @@ export default function Home() {
   const [inputText, setInputText] = useState("");
   const [texts, setTexts] = useState("");
   const [loading, setLoading] = useState(false);
+  const [isResult, setIsResult] = useState(false);
   const [audioBlob, setAudioBlob] = useState(null);
   const [speed, setSpeed] = useState(1.0);
   const [genderVoice, setGenderVoice] = useState("alloy");
@@ -59,7 +62,8 @@ export default function Home() {
   };
 
   const handleButtonClick = async () => {
-    await setLoading(true);
+    setIsResult(true);
+    setLoading(true);
     const text = await openAi.generateCompletion(
       dataCompletion(inputText),
       secretKey
@@ -113,6 +117,7 @@ export default function Home() {
     return openAi.generateTextToVoice(data, secretKey);
   }
   console.log(loading);
+  console.log(isResult);
   return (
     <Container>
       <Grid container spacing={4} margin={2}>
@@ -127,111 +132,138 @@ export default function Home() {
           </Grid>
         ) : (
           <>
-            <Grid item xs={12} display={"flex"} justifyContent={"center"}>
-              <Box>
-                <TextField
-                  id="outlined-required"
-                  label="Input your text"
-                  placeholder="Input your text"
-                  value={secretKey}
-                  onChange={(event) => setSecretKey(event.target.value)}
-                  required
-                />
-              </Box>
-            </Grid>
-            <Grid item xs={12} display={"flex"} justifyContent={"center"}>
-              <Box>
-                <TextField
-                  id="outlined-required"
-                  label="Input your text"
-                  placeholder="Input your text"
-                  value={inputText}
-                  onChange={(event) => setInputText(event.target.value)}
-                />
-              </Box>
-
-              <Box sx={{ minWidth: 100 }}>
-                <FormControl fullWidth>
-                  <InputLabel id="demo-simple-select-label">Tốc độ</InputLabel>
-                  <Select
-                    labelId="demo-simple-select-label"
-                    id="demo-simple-select-speed"
-                    value={speed}
-                    label="Choose speed"
-                    onChange={handleChangeSpeed}
-                  >
-                    {speedOptions.map((option) => (
-                      <MenuItem key={option.value} value={option.value}>
-                        {option.label}
-                      </MenuItem>
-                    ))}
-                  </Select>
-                </FormControl>
-              </Box>
-
-              <Box sx={{ minWidth: 100 }}>
-                <FormControl fullWidth>
-                  <InputLabel id="demo-simple-select-label">Giọng</InputLabel>
-                  <Select
-                    labelId="demo-simple-select-label"
-                    id="demo-simple-select"
-                    value={genderVoice}
-                    label="Choose speed"
-                    onChange={handleChangeGenderVoice}
-                  >
-                    {voiceOptions.map((option) => (
-                      <MenuItem key={option.value} value={option.value}>
-                        {option.label}
-                      </MenuItem>
-                    ))}
-                  </Select>
-                </FormControl>
-              </Box>
-              <Button variant="contained" onClick={handleButtonClick}>
-                Tạo
-              </Button>
-            </Grid>
-            <Grid
-              container
-              item
-              xs={12}
-              display={"flex"}
-              justifyContent={"center"}
-              spacing={3}
-            >
-              <Grid item xs={12}>
-                {audioBlob && (
-                  <audio key={audioKey} controls style={{ width: "30rem" }}>
-                    <source
-                      src={URL.createObjectURL(audioBlob)}
-                      type="audio/mp3"
+            {!isResult ? (
+              <>
+                <Grid item xs={12} display={"flex"} justifyContent={"center"}>
+                  <Box>
+                    <TextField
+                      id="outlined-required"
+                      label="Input your text"
+                      placeholder="Input your text"
+                      value={secretKey}
+                      onChange={(event) => setSecretKey(event.target.value)}
+                      required
                     />
-                  </audio>
-                )}
-              </Grid>
-              <Grid item xs={6}>
-                {texts && (
-                  <Box
-                    style={{ overflowY: "auto", maxHeight: "100%" }}
-                    display={"flex"}
-                    justifyContent={"start"}
-                  >
-                    {texts}
                   </Box>
-                )}
-              </Grid>
-              <Grid item xs={6}>
-                <Box style={{ width: "100%", height: "25rem" }}>
-                  {urlImages && (
-                    <img
-                      style={{ height: "100%", width: "100%" }}
-                      src={urlImages}
-                      alt="loi"
+                </Grid>
+                <Grid item xs={12} display={"flex"} justifyContent={"center"}>
+                  <Box>
+                    <TextField
+                      id="outlined-required"
+                      label="Input your text"
+                      placeholder="Input your text"
+                      value={inputText}
+                      onChange={(event) => setInputText(event.target.value)}
                     />
-                  )}
-                </Box>
-              </Grid>
-            </Grid>
+                  </Box>
+
+                  <Box sx={{ minWidth: 100 }}>
+                    <FormControl fullWidth>
+                      <InputLabel id="demo-simple-select-label">
+                        Tốc độ
+                      </InputLabel>
+                      <Select
+                        labelId="demo-simple-select-label"
+                        id="demo-simple-select-speed"
+                        value={speed}
+                        label="Choose speed"
+                        onChange={handleChangeSpeed}
+                      >
+                        {speedOptions.map((option) => (
+                          <MenuItem key={option.value} value={option.value}>
+                            {option.label}
+                          </MenuItem>
+                        ))}
+                      </Select>
+                    </FormControl>
+                  </Box>
+
+                  <Box sx={{ minWidth: 100 }}>
+                    <FormControl fullWidth>
+                      <InputLabel id="demo-simple-select-label">
+                        Giọng
+                      </InputLabel>
+                      <Select
+                        labelId="demo-simple-select-label"
+                        id="demo-simple-select"
+                        value={genderVoice}
+                        label="Choose speed"
+                        onChange={handleChangeGenderVoice}
+                      >
+                        {voiceOptions.map((option) => (
+                          <MenuItem key={option.value} value={option.value}>
+                            {option.label}
+                          </MenuItem>
+                        ))}
+                      </Select>
+                    </FormControl>
+                  </Box>
+                  <Button variant="contained" onClick={handleButtonClick}>
+                    Tạo
+                  </Button>
+                </Grid>
+              </>
+            ) : (
+              <>
+                <Button variant="contained">
+                  <KeyboardBackspaceIcon
+                    onClick={() => {
+                      setIsResult(false);
+                    }}
+                  />
+                </Button>
+                <Grid
+                  container
+                  item
+                  xs={12}
+                  display={"flex"}
+                  justifyContent={"center"}
+                  spacing={3}
+                >
+                  <Grid item xs={4}>
+                    <Box style={{ width: "100%", height: "25rem" }}>
+                      {urlImages && (
+                        <img
+                          style={{ height: "100%", width: "100%" }}
+                          src={urlImages}
+                          alt="loi"
+                        />
+                      )}
+                    </Box>
+                  </Grid>
+                  <Grid item xs={8}>
+                    {texts && (
+                      <Card style={{ height: "100%" }}>
+                        <Box
+                          style={{ overflowY: "auto", maxHeight: "100%" }}
+                          textAlign={"left"}
+                          padding={2}
+                        >
+                          {texts}
+                        </Box>
+                      </Card>
+                    )}
+                  </Grid>
+
+                  <Grid item xs={12}>
+                    {audioBlob && (
+                      <Card style={{ height: "100%", padding: "0.2rem" }}>
+                        <audio
+                          key={audioKey}
+                          controls
+                          style={{ width: "30rem" }}
+                        >
+                          <source
+                            src={URL.createObjectURL(audioBlob)}
+                            type="audio/mp3"
+                          />
+                        </audio>
+                      </Card>
+                    )}
+                  </Grid>
+                </Grid>
+              </>
+            )}
 
             <Snackbar
               open={snackbarOpen}
