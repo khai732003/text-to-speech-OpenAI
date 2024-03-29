@@ -17,7 +17,7 @@ const HEADER = (secretKey) => {
 const generateCompletion = async (data, secretKey) => {
   try {
     const response = await axios.post(`${COMPLETION_URL}`, data, HEADER(secretKey));
-    return response.data;
+    return response;
   } catch (error) {
     console.error("Error sending data:", error);
     throw error;
@@ -27,7 +27,7 @@ const generateCompletion = async (data, secretKey) => {
 const generateImage = async (data, secretKey) => {
   try {
     const response = await axios.post(`${IMAGE_URL}`, data, HEADER(secretKey));
-    return response.data;
+    return response;
   } catch (error) {
     console.error("Error sending data:", error);
     throw error;
@@ -43,7 +43,7 @@ const generateTextToVoice = async (data, secretKey) => {
       },
       responseType: "arraybuffer",
     });
-    return response.data;
+    return response;
   } catch (error) {
     console.error("Error sending data:", error);
     throw error;
