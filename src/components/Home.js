@@ -19,23 +19,12 @@ import {
   Toolbar,
 } from "@mui/material";
 
-import { makeStyles } from "@mui/styles";
 import KeyboardBackspaceIcon from "@mui/icons-material/KeyboardBackspace";
 import SendIcon from "@mui/icons-material/Send";
 import React, { useState } from "react";
 import axios from "axios";
 import openAi from "../api";
 import Footer from "./Footer";
-
-const useStyles = makeStyles((theme) => ({
-  appBar: {
-    backgroundImage:
-      'url("https://daihoc.fpt.edu.vn/templates/fpt-university/images/header.jpg")',
-    backgroundSize: "cover",
-    backgroundRepeat: "no-repeat",
-    backgroundPosition: "center",
-  },
-}));
 
 export default function Home() {
   const [inputText, setInputText] = useState("");
@@ -52,7 +41,6 @@ export default function Home() {
   const [snackbarOpen, setSnackbarOpen] = useState(false);
   const [snackbarMessage, setSnackbarMessage] = useState("");
 
-  const classes = useStyles();
 
   const voiceOptions = [
     { value: "alloy", label: "Nam" },
