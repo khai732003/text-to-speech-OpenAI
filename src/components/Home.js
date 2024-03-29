@@ -17,6 +17,7 @@ import {
   Card,
   AppBar,
   Toolbar,
+  CardContent,
 } from "@mui/material";
 
 import KeyboardBackspaceIcon from "@mui/icons-material/KeyboardBackspace";
@@ -31,7 +32,7 @@ export default function Home() {
   const [moreText, setMoreText] = useState("100");
   const [texts, setTexts] = useState("");
   const [loading, setLoading] = useState(false);
-  const [isResult, setIsResult] = useState(false);
+  const [textShow, setTextShow] = useState("");
   const [audioBlob, setAudioBlob] = useState(null);
   const [speed, setSpeed] = useState(1.0);
   const [genderVoice, setGenderVoice] = useState("alloy");
@@ -40,7 +41,6 @@ export default function Home() {
   const [urlImages, setUrlImages] = useState(null);
   const [snackbarOpen, setSnackbarOpen] = useState(false);
   const [snackbarMessage, setSnackbarMessage] = useState("");
-
 
   const voiceOptions = [
     { value: "alloy", label: "Nam" },
@@ -69,7 +69,7 @@ export default function Home() {
   };
 
   const handleButtonClick = async () => {
-    setIsResult(true);
+    setTextShow(inputText);
     setLoading(true);
     const finalInputText =
       "Tạo nội dung với: " +
@@ -97,7 +97,6 @@ export default function Home() {
       setAudioBlob(audioBlob);
       setAudioKey((prevKey) => prevKey + 1);
     } catch (error) {
-      setIsResult(false);
       setLoading(false);
       console.error("Error:", error.response.status);
       if (error.response && error.response.status === 401) {
@@ -135,34 +134,75 @@ export default function Home() {
     const response = await openAi.generateTextToVoice(data, secretKey);
     return response.data;
   };
+  console.log(textShow);
   return (
     <>
       <Grid container spacing={4}>
         <Container>
-          {loading ? (
-            <Grid
-              item
-              xs={12}
-              display={"flex"}
-              justifyContent={"center"}
-              marginTop={24}
-            >
-              <CircularProgress color="secondary" />
-            </Grid>
-          ) : (
-            <>
+          <Grid
+            container
+            item
+            xs={12}
+            display={"flex"}
+            justifyContent={"center"}
+            spacing={2}
+            marginTop={4}
+          >
+            {textShow ? (
+              <Grid item xs={12}>
+                <Card style={{ height: "100%", padding: "0.2rem" }}>
+                  <Typography display={"flex"} justifyContent={"start"}>
+                    {" "}
+                    {textShow}{" "}
+                  </Typography>
+                </Card>
+              </Grid>
+            ) : (
+              <Grid item xs={12} marginTop={24}>
+                <Grid container spacing={4}>
+                  <Grid item xs={6}>
+                    <Card>
+                      <CardContent>
+                        <Typography gutterBottom variant="h5" component="div">
+                          Trải nghiệm
+                        </Typography>
+                        <Typography variant="body2" color="text.secondary">
+                          Đi vào thế giới tuyệt vời của AI tại FPT University
+                        </Typography>
+                      </CardContent>
+                    </Card>
+                  </Grid>
+                  <Grid item xs={6}>
+                    <Card>
+                      <CardContent>
+                        <Typography gutterBottom variant="h5" component="div">
+                          Kể chuyện
+                        </Typography>
+                        <Typography variant="body2" color="text.secondary">
+                          Bạn sẽ được trải nghiệm AI kể chuyện với nội dung bạn mong
+                          muốn
+                        </Typography>
+                      </CardContent>
+                    </Card>
+                  </Grid>
+                </Grid>
+              </Grid>
+            )}
+            {loading ? (
+              <Grid
+                item
+                xs={12}
+                display={"flex"}
+                justifyContent={"center"}
+                marginTop={24}
+              >
+                <CircularProgress color="secondary" />
+              </Grid>
+            ) : (
               <>
-                <Grid
-                  container
-                  item
-                  xs={12}
-                  display={"flex"}
-                  justifyContent={"center"}
-                  spacing={3}
-                  marginTop={4}
-                >
+                <>
                   <Grid item xs={4}>
-                    <Box style={{ width: "100%", height: "25rem" }}>
+                    <Box style={{ width: "100%", height: "24rem" }}>
                       {urlImages && (
                         <img
                           style={{ height: "100%", width: "100%" }}
@@ -176,7 +216,7 @@ export default function Home() {
                     {texts && (
                       <Card style={{ height: "100%" }}>
                         <Box
-                          style={{ overflowY: "auto", maxHeight: "400px" }}
+                          style={{ overflowY: "auto", maxHeight: "24rem" }}
                           textAlign={"left"}
                           padding={2}
                         >
@@ -197,21 +237,21 @@ export default function Home() {
                       </audio>
                     )}
                   </Grid>
-                </Grid>
-              </>
+                </>
 
-              <Snackbar
-                open={snackbarOpen}
-                autoHideDuration={6000}
-                onClose={handleSnackbarClose}
-                anchorOrigin={{ vertical: "top", horizontal: "right" }}
-              >
-                <Alert onClose={handleSnackbarClose} severity="error">
-                  {snackbarMessage}
-                </Alert>
-              </Snackbar>
-            </>
-          )}
+                <Snackbar
+                  open={snackbarOpen}
+                  autoHideDuration={6000}
+                  onClose={handleSnackbarClose}
+                  anchorOrigin={{ vertical: "top", horizontal: "right" }}
+                >
+                  <Alert onClose={handleSnackbarClose} severity="error">
+                    {snackbarMessage}
+                  </Alert>
+                </Snackbar>
+              </>
+            )}
+          </Grid>
           <Box position={"relative"}>
             <AppBar
               position="fixed"
