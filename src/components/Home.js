@@ -19,7 +19,8 @@ import {
   Toolbar,
   CardContent,
 } from "@mui/material";
-
+import ComputerIcon from "@mui/icons-material/Computer";
+import AutoStoriesIcon from "@mui/icons-material/AutoStories";
 import KeyboardBackspaceIcon from "@mui/icons-material/KeyboardBackspace";
 import SendIcon from "@mui/icons-material/Send";
 import React, { useState } from "react";
@@ -149,7 +150,7 @@ export default function Home() {
   return (
     <>
       <Grid container spacing={4}>
-        <Container style={{marginTop: "10rem"}}>
+        <Container style={{ marginTop: "10rem" }}>
           <Grid
             container
             item
@@ -170,10 +171,27 @@ export default function Home() {
               </Grid>
             ) : (
               <Grid item xs={12} marginTop={24}>
-                <Grid container spacing={4}>
-                  <Grid item xs={6}>
-                    <Card>
+                <Grid
+                  container
+                  display={"flex"}
+                  justifyContent={"center"}
+                >
+                  <Grid
+                    item
+                    xs={6}
+                    display={"flex"}
+                    justifyContent={"center"}
+                  >
+                    <Card style={{ width: "50%", display: "flex" }}>
                       <CardContent>
+                        <ComputerIcon
+                          style={{
+                            width: "2.5rem",
+                            height: "2.5rem",
+                            color: "#e65c1a",
+                          }}
+                        />
+
                         <Typography gutterBottom variant="h5" component="div">
                           Trải nghiệm
                         </Typography>
@@ -183,9 +201,16 @@ export default function Home() {
                       </CardContent>
                     </Card>
                   </Grid>
-                  <Grid item xs={6}>
-                    <Card>
+                  <Grid item xs={6} display={"flex"} justifyContent={"center"}>
+                    <Card style={{ width: "50%" }}>
                       <CardContent>
+                        <AutoStoriesIcon
+                          style={{
+                            width: "2.5rem",
+                            height: "2.5rem",
+                            color: "#bf4cff",
+                          }}
+                        />
                         <Typography gutterBottom variant="h5" component="div">
                           Kể chuyện
                         </Typography>
@@ -269,11 +294,11 @@ export default function Home() {
               style={{
                 top: 0,
                 bottom: "auto",
-                padding: "0.5rem 0 0.5rem 0",
+                padding: "0 0 0.5rem 0",
                 backgroundColor: "white",
               }}
             >
-              <Toolbar variant="dense" style={{ backgroundColor: "white" }}>
+              <Toolbar style={{ backgroundColor: "white" }}>
                 <Grid container item xs={12} spacing={2}>
                   <Grid item xs={12}>
                     <Header />
@@ -293,33 +318,39 @@ export default function Home() {
                     </Box>
                   </Grid>
                   <Grid item xs={1}>
-                    <Button
-                      fullWidth
-                      variant="outlined"
-                      onClick={handleClickOpen}
-                      disabled={loading}
-                    >
-                      Tùy chỉnh
-                    </Button>
-                    <Option options={optionProps} />
+                    <Box style={{ height: "100%" }}>
+                      <Button
+                        fullWidth
+                        variant="outlined"
+                        onClick={handleClickOpen}
+                        disabled={loading}
+                        style={{ height: "100%" }}
+                      >
+                        Tùy chỉnh
+                      </Button>
+                      <Option options={optionProps} />
+                    </Box>
                   </Grid>
-                  <Grid item xs={1} display={"flex"} justifyContent={"start"}>
-                    <Button
-                      fullWidth
-                      variant="contained"
-                      style={{
-                        backgroundColor: "#f26f21",
-                        color: "white",
-                      }}
-                      onClick={handleButtonClick}
-                      disabled={loading}
-                    >
-                      {loading ? (
-                        <CircularProgress color="inherit" />
-                      ) : (
-                        <SendIcon />
-                      )}
-                    </Button>
+                  <Grid item xs={1}>
+                    <Box style={{ height: "100%" }}>
+                      <Button
+                        variant="contained"
+                        fullWidth
+                        style={{
+                          backgroundColor: "#f26f21",
+                          color: "white",
+                          height: "100%",
+                        }}
+                        onClick={handleButtonClick}
+                        disabled={loading}
+                      >
+                        {loading ? (
+                          <CircularProgress color="inherit" />
+                        ) : (
+                          <SendIcon />
+                        )}
+                      </Button>
+                    </Box>
                   </Grid>
                 </Grid>
               </Toolbar>
