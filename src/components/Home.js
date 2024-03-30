@@ -69,6 +69,12 @@ export default function Home() {
   };
 
   const handleButtonClick = async () => {
+    if (!loading) {
+      setAudioBlob("");
+      setTexts("");
+      setUrlImages("");
+    }
+
     setTextShow(inputText);
     setLoading(true);
     const finalInputText =
@@ -89,10 +95,9 @@ export default function Home() {
       {
         text != null && image != null && setLoading(false);
       }
-      setTexts(text.choices[0].message.content);
-      setUrlImages(image.data[0].url);
+      await setTexts(text.choices[0].message.content);
+      await setUrlImages(image.data[0].url);
       const audioData = await voiceGenerator(text.choices[0].message.content);
-      console.log(audioData);
       const audioBlob = new Blob([audioData], { type: "audio/mpeg" });
       setAudioBlob(audioBlob);
       setAudioKey((prevKey) => prevKey + 1);
@@ -160,28 +165,10 @@ export default function Home() {
             spacing={2}
             marginTop={4}
           >
-            {textShow ? (
-              <Grid item xs={12}>
-                <Card style={{ height: "100%", padding: "0.2rem" }}>
-                  <Typography display={"flex"} justifyContent={"start"}>
-                    {" "}
-                    {textShow}{" "}
-                  </Typography>
-                </Card>
-              </Grid>
-            ) : (
+            {!textShow ? (
               <Grid item xs={12} marginTop={24}>
-                <Grid
-                  container
-                  display={"flex"}
-                  justifyContent={"center"}
-                >
-                  <Grid
-                    item
-                    xs={6}
-                    display={"flex"}
-                    justifyContent={"center"}
-                  >
+                <Grid container display={"flex"} justifyContent={"center"}>
+                  <Grid item xs={6} display={"flex"} justifyContent={"center"}>
                     <Card style={{ width: "50%", display: "flex" }}>
                       <CardContent>
                         <ComputerIcon
@@ -189,7 +176,7 @@ export default function Home() {
                             width: "2.5rem",
                             height: "2.5rem",
                             color: "#e65c1a",
-                            marginBottom: "2rem"
+                            marginBottom: "2rem",
                           }}
                         />
 
@@ -210,7 +197,7 @@ export default function Home() {
                             width: "2.5rem",
                             height: "2.5rem",
                             color: "#bf4cff",
-                            marginBottom: "2rem"
+                            marginBottom: "2rem",
                           }}
                         />
                         <Typography gutterBottom variant="h5" component="div">
@@ -225,33 +212,11 @@ export default function Home() {
                   </Grid>
                 </Grid>
               </Grid>
-            )}
-            {loading ? (
-              <Grid
-                item
-                xs={12}
-                display={"flex"}
-                justifyContent={"center"}
-                marginTop={24}
-              >
-                <CircularProgress color="secondary" />
-              </Grid>
             ) : (
               <>
-                <>
-                  <Grid item xs={4}>
-                    <Box style={{ width: "100%", height: "24rem" }}>
-                      {urlImages && (
-                        <img
-                          style={{ height: "100%", width: "100%" }}
-                          src={urlImages}
-                          alt="loi"
-                        />
-                      )}
-                    </Box>
-                  </Grid>
+                <Grid container marginTop={"1rem"} spacing={4}>
                   <Grid item xs={8}>
-                    {texts && (
+                    {texts ? (
                       <Card style={{ height: "100%" }}>
                         <Box
                           style={{ overflowY: "auto", maxHeight: "24rem" }}
@@ -261,11 +226,26 @@ export default function Home() {
                           {texts}
                         </Box>
                       </Card>
+                    ) : (
+                      <CircularProgress color="secondary" />
                     )}
+                  </Grid>
+                  <Grid item xs={4}>
+                    <Box style={{ width: "100%", height: "24rem" }}>
+                      {urlImages ? (
+                        <img
+                          style={{ height: "100%", width: "100%" }}
+                          src={urlImages}
+                          alt="loi"
+                        />
+                      ) : (
+                        <CircularProgress color="secondary" />
+                      )}
+                    </Box>
                   </Grid>
 
                   <Grid item xs={12}>
-                    {audioBlob && (
+                    {audioBlob ? (
                       <audio key={audioKey} controls style={{ width: "30rem" }}>
                         <source
                           src={URL.createObjectURL(audioBlob)}
@@ -273,9 +253,11 @@ export default function Home() {
                           style={{ backgroundColor: "white" }}
                         />
                       </audio>
+                    ) : (
+                      <CircularProgress color="secondary" />
                     )}
                   </Grid>
-                </>
+                </Grid>
 
                 <Snackbar
                   open={snackbarOpen}
