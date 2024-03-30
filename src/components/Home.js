@@ -189,6 +189,7 @@ export default function Home() {
                             width: "2.5rem",
                             height: "2.5rem",
                             color: "#e65c1a",
+                            marginBottom: "2rem"
                           }}
                         />
 
@@ -209,6 +210,7 @@ export default function Home() {
                             width: "2.5rem",
                             height: "2.5rem",
                             color: "#bf4cff",
+                            marginBottom: "2rem"
                           }}
                         />
                         <Typography gutterBottom variant="h5" component="div">
