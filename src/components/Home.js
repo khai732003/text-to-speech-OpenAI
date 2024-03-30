@@ -26,9 +26,12 @@ import React, { useState } from "react";
 import axios from "axios";
 import openAi from "../api";
 import Footer from "./Footer";
+import Option from "./Option";
+import Header from "./Header";
 
 export default function Home() {
   const [inputText, setInputText] = useState("");
+  const [open, setOpen] = React.useState(false);
   const [moreText, setMoreText] = useState("100");
   const [texts, setTexts] = useState("");
   const [loading, setLoading] = useState(false);
@@ -42,18 +45,6 @@ export default function Home() {
   const [snackbarOpen, setSnackbarOpen] = useState(false);
   const [snackbarMessage, setSnackbarMessage] = useState("");
 
-  const voiceOptions = [
-    { value: "alloy", label: "Nam" },
-    { value: "nova", label: "Nữ" },
-  ];
-
-  const speedOptions = [
-    { value: 0.5, label: "0.5X" },
-    { value: 0.8, label: "0.8X" },
-    { value: 1.0, label: "1.0X" },
-    { value: 1.5, label: "1.5X" },
-  ];
-
   const dataImage = (text) => {
     return {
       model: "dall-e-3",
@@ -66,6 +57,14 @@ export default function Home() {
       messages: [{ role: "user", content: text }],
       model: "gpt-4",
     };
+  };
+
+  const handleClickOpen = () => {
+    setOpen(true);
+  };
+
+  const handleClose = () => {
+    setOpen(false);
   };
 
   const handleButtonClick = async () => {
@@ -134,11 +133,23 @@ export default function Home() {
     const response = await openAi.generateTextToVoice(data, secretKey);
     return response.data;
   };
-  console.log(textShow);
+  const optionProps = {
+    secretKey: secretKey,
+    setSecretKey: setSecretKey,
+    moreText: moreText,
+    setMoreText: setMoreText,
+    speed: speed,
+    handleChangeSpeed: handleChangeSpeed,
+    genderVoice: genderVoice,
+    handleChangeGenderVoice: handleChangeGenderVoice,
+    handleClose: handleClose,
+    open: open,
+    loading: loading,
+  };
   return (
     <>
       <Grid container spacing={4}>
-        <Container>
+        <Container style={{marginTop: "10rem"}}>
           <Grid
             container
             item
@@ -179,8 +190,8 @@ export default function Home() {
                           Kể chuyện
                         </Typography>
                         <Typography variant="body2" color="text.secondary">
-                          Bạn sẽ được trải nghiệm AI kể chuyện với nội dung bạn mong
-                          muốn
+                          Bạn sẽ được trải nghiệm AI kể chuyện với nội dung bạn
+                          mong muốn
                         </Typography>
                       </CardContent>
                     </Card>
@@ -256,103 +267,45 @@ export default function Home() {
             <AppBar
               position="fixed"
               style={{
-                top: "auto",
-                bottom: 0,
-                padding: "1rem 0 1rem 0",
+                top: 0,
+                bottom: "auto",
+                padding: "0.5rem 0 0.5rem 0",
                 backgroundColor: "white",
-                margin: "1rem 0 0 0",
               }}
             >
               <Toolbar variant="dense" style={{ backgroundColor: "white" }}>
-                <Grid container item xs={12} spacing={3}>
-                  <Grid item xs={1}>
+                <Grid container item xs={12} spacing={2}>
+                  <Grid item xs={12}>
+                    <Header />
+                  </Grid>
+                  <Grid item xs={10}>
                     <Box width="100%" backgroundColor={"white"}>
                       <TextField
+                        fullWidth
                         backgroundColor={"white"}
                         id="outlined-required"
-                        label="Secret Key"
-                        fullWidth
-                        placeholder="Nhập Secret Key"
-                        value={secretKey}
-                        onChange={(event) => setSecretKey(event.target.value)}
-                        required
+                        label="Nội dung"
+                        placeholder="Vui lòng nhập nội dung"
+                        value={inputText}
+                        onChange={(event) => setInputText(event.target.value)}
                         disabled={loading}
                       />
                     </Box>
                   </Grid>
-                  <Grid container item xs={10} spacing={2}>
-                    <Grid item xs={10}>
-                      <Box width="100%" backgroundColor={"white"}>
-                        <TextField
-                          fullWidth
-                          backgroundColor={"white"}
-                          id="outlined-required"
-                          label="Nội dung"
-                          placeholder="Vui lòng nhập nội dung"
-                          value={inputText}
-                          onChange={(event) => setInputText(event.target.value)}
-                          disabled={loading}
-                        />
-                      </Box>
-                    </Grid>
-                    <Grid item xs={1} display={"flex"} justifyContent={"start"}>
-                      <Box sx={{ minWidth: 70 }} backgroundColor={"white"}>
-                        <TextField
-                          backgroundColor={"white"}
-                          id="outlined-required"
-                          label="Số Lượng"
-                          fullWidth
-                          placeholder="Nhập Số Lượng"
-                          value={moreText}
-                          onChange={(event) => setMoreText(event.target.value)}
-                          required
-                          disabled={loading}
-                        />
-                      </Box>
-                      <Box sx={{ minWidth: 70 }} backgroundColor={"white"}>
-                        <FormControl fullWidth disabled={loading}>
-                          <InputLabel id="demo-simple-select-label">
-                            Tốc độ
-                          </InputLabel>
-                          <Select
-                            labelId="demo-simple-select-label"
-                            id="demo-simple-select-speed"
-                            value={speed}
-                            label="Choose speed"
-                            onChange={handleChangeSpeed}
-                          >
-                            {speedOptions.map((option) => (
-                              <MenuItem key={option.value} value={option.value}>
-                                {option.label}
-                              </MenuItem>
-                            ))}
-                          </Select>
-                        </FormControl>
-                      </Box>
-                      <Box sx={{ minWidth: 70 }} backgroundColor={"white"}>
-                        <FormControl fullWidth disabled={loading}>
-                          <InputLabel id="demo-simple-select-label">
-                            Giọng
-                          </InputLabel>
-                          <Select
-                            labelId="demo-simple-select-label"
-                            id="demo-simple-select"
-                            value={genderVoice}
-                            label="Choose speed"
-                            onChange={handleChangeGenderVoice}
-                          >
-                            {voiceOptions.map((option) => (
-                              <MenuItem key={option.value} value={option.value}>
-                                {option.label}
-                              </MenuItem>
-                            ))}
-                          </Select>
-                        </FormControl>
-                      </Box>
-                    </Grid>
+                  <Grid item xs={1}>
+                    <Button
+                      fullWidth
+                      variant="outlined"
+                      onClick={handleClickOpen}
+                      disabled={loading}
+                    >
+                      Tùy chỉnh
+                    </Button>
+                    <Option options={optionProps} />
                   </Grid>
                   <Grid item xs={1} display={"flex"} justifyContent={"start"}>
                     <Button
+                      fullWidth
                       variant="contained"
                       style={{
                         backgroundColor: "#f26f21",
